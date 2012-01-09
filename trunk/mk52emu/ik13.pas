@@ -34,7 +34,7 @@ type
     micro_tact, microcommand: integer;
     sk: byte;
     md: byte;
-    keyboard_x, keyboard_y: byte;
+    keyboard_x, keyboard_y, segment_i8: byte;
     Rg_In, Rg_Out: boolean;
     asp, adr_mc: byte;
   end;
@@ -50,30 +50,6 @@ type
 
 var
 
-  nopcmd_1302: array[0..1] of cardinal = ($0000001, $01000000);
-  nopsp_1302: array[0..71] of byte = (
-    $00, $00, $00, $00, $00, $00, $00, $00, $00,
-    $09, $0A, $00, $00, $00, $00, $00, $00, $00,
-    $00, $01, $02, $03, $04, $05, $06, $07, $08,
-    $00, $01, $02, $03, $04, $05, $06, $07, $08,
-    $00, $01, $02, $03, $04, $05, $06, $07, $08,
-    $00, $01, $02, $03, $04, $05, $06, $07, $08,
-    $00, $01, $02, $03, $04, $05, $06, $07, $08,
-    $00, $01, $02, $03, $04, $05, $06, $07, $08);
-
-  nopmc_1302: array[0..10] of cardinal = (
-    $00, // 0
-    $01,
-    $02,
-    $03,
-    $906C00,
-    $05,
-    $06,
-    $800040, // 07
-    $00,
-    $800100, // 09
-    $900844 //+ $4000 // 0a
-    );
 
   J: array[0..41] of byte = (0, 1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 3, 4, 5, 3,
     4, 5, 3, 4, 5, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5);
@@ -256,35 +232,19 @@ begin
         Registr_S1[tact_0123] := ((keyboard_y and four_1248) > 0);
         T := true;
       end;
-  end;
 
-
-
-
-  (*
-  if (keyboard_y = 0) then
-    if ((cmd_1302[sk] and $FC0000) > 0) then // ÀÑÏ1>=4
-      T := false;
-
-
-  if ((micro_tact div 4) + 3) = (keyboard_x * 3) then // òîëüêî E = 0 ?
-    if (keyboard_y > 0) then
-      if ((cmd_1302[sk] and $FC0000) = 0) then // ÀÑÏ1<4
-      begin
-      // keyboard_y = K2 * 8 + K1
-        Registr_S1[tact_0123] := ((keyboard_y and four_1248) > 0);
-        T := true;
-      end;
-
-  *)
+    if (Signal_D > 0) and (Signal_D < 12) then
+      if L then segment_i8 := Signal_D;
   // Äèîä VD4
   //if ((micro_tact div 12) + 1) = 13 then
-  (*if (micro_tact div 4) = 36 then
-  begin
-    Registr_S1[tact_0123] := ((8 and four_1248) > 0);
-    T := true;
+  (* if (micro_tact div 4) = 36 then
+    begin
+      Registr_S1[tact_0123] := ((8 and four_1248) > 0);
+      T := true;
+    end;
+    *)
   end;
-  *)
+
 
   if ((microcommand shr 12) and 4) > 0 then gamma := not T;
   if ((microcommand shr 12) and 2) > 0 then gamma := gamma or not L;
