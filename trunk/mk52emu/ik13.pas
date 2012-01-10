@@ -10,7 +10,7 @@ type
     procedure tact_exec2;
 
   public
-    Registr_M: array[0..1007] of boolean;
+    Registr_M: array[0..1024] of boolean;
     Rg_In, Rg_Out: boolean;
     micro_tact: integer;
   end;
@@ -233,8 +233,9 @@ begin
         T := true;
       end;
 
-    if (Signal_D > 0) and (Signal_D < 12) then
-      if L then segment_i8 := Signal_D;
+    if tact_0123 = 0 then
+      if (Signal_D > 0) and (Signal_D < 12) then
+        if L then segment_i8 := Signal_D;
   // Диод VD4
   //if ((micro_tact div 12) + 1) = 13 then
   (* if (micro_tact div 4) = 36 then
