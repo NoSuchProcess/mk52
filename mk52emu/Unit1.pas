@@ -48,6 +48,10 @@ type
     Button33: TButton;
     Button34: TButton;
     Button35: TButton;
+    GroupBox1: TGroupBox;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    RadioButton3: TRadioButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Button31Click(Sender: TObject);
@@ -57,6 +61,9 @@ type
     procedure Button33Click(Sender: TObject);
     procedure Button34Click(Sender: TObject);
     procedure Button35Click(Sender: TObject);
+    procedure RadioButton1Click(Sender: TObject);
+    procedure RadioButton2Click(Sender: TObject);
+    procedure RadioButton3Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -124,7 +131,7 @@ begin
   begin
  /////////////////////////
     bmp := tbitmap.Create;
-    bmp.Width := 200;
+    bmp.Width := 220;
     bmp.Height := 50;
 
  // bmp.Transparent := true;
@@ -169,7 +176,7 @@ begin
       if (dig and 16) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 20); bmp.Canvas.LineTo(x + 0, y + 10); end; //e
       if (dig and 32) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 10); bmp.Canvas.LineTo(x + 0, y + 00); end; //f
       if (dig and 64) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 10); bmp.Canvas.LineTo(x + 10, y + 10); end; //g
-      if (ind[12] + 1) = i then begin bmp.Canvas.MoveTo(x + 12, y + 22); bmp.Canvas.LineTo(x + 12, y + 23); end; //g
+      if ((ind[12] + 1) = i) and (i <> 9) then begin bmp.Canvas.MoveTo(x + 12, y + 22); bmp.Canvas.LineTo(x + 12, y + 23); end; //g
     end;
     Image1.Transparent := true;
     Image1.Picture.Bitmap.Assign(bmp);
@@ -183,7 +190,8 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 var
   i: integer;
 begin
-  for i := 1 to 16800 do mk52.exec;
+
+  for i := 1 to 16800 do mk52.exec; // 2352 реальная скорость (23520 тик/сек)
 
  // for i := 0 to 11 do
  // begin
@@ -237,10 +245,7 @@ begin
   ///
   memo1.Lines.Add('micro_tact := ' + inttostr(byte(mk52.ik1302.micro_tact)));
 
-
-
   StringGrid1.Cells[1, 1] := '1';
-
 
   for i := 0 to 13 do
   begin
@@ -255,14 +260,7 @@ begin
     StringGrid1.Cells[i + 1, 7] := inttohex(mk52.ik1302.read_st(i * 3), 1);
     StringGrid1.Cells[i + 1, 8] := inttohex(mk52.ik1302.read_st((i * 3) + 1), 1);
     StringGrid1.Cells[i + 1, 9] := inttohex(mk52.ik1302.read_st((i * 3) + 2), 1);
-
-
-
   end;
-
-
-
-
 
   // indikator
 
@@ -283,8 +281,6 @@ begin
 
   //edit1.Text := inttostr(byte(true));
   //dit1.Text := inttostr(not 1);
-
-
 
 
 end;
@@ -317,7 +313,7 @@ procedure TForm1.Button33Click(Sender: TObject);
 var
   i: integer;
 begin
- Timer1.Enabled := false;
+  Timer1.Enabled := false;
   for i := 0 to 41 do Button31Click(sender);
 
 end;
@@ -330,7 +326,6 @@ var
 begin
   ir2_1 := Tir2.Create;
 
-
   for i := 0 to 1010 do
   begin
     ir2_1.Rg_In := true;
@@ -342,7 +337,25 @@ end;
 
 procedure TForm1.Button35Click(Sender: TObject);
 begin
- Timer1.Enabled := true;
+  Timer1.Enabled := true;
+end;
+
+procedure TForm1.RadioButton1Click(Sender: TObject);
+begin
+  mk52.grd := 1;
+  memo1.Lines.Add('1');
+end;
+
+procedure TForm1.RadioButton2Click(Sender: TObject);
+begin
+  mk52.grd := 2;
+  memo1.Lines.Add('2');
+end;
+
+procedure TForm1.RadioButton3Click(Sender: TObject);
+begin
+  mk52.grd := 3;
+  memo1.Lines.Add('3');
 end;
 
 end.

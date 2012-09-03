@@ -56,6 +56,8 @@ type
   public
     ik1302, ik1303, ik1306: Tik1302;
     ir2_1, ir2_2: Tir2;
+
+    grd: integer;
   end;
 
 var
@@ -237,6 +239,18 @@ begin
   beta := false;
   gamma := false;
 
+  case ((microcommand shr 24) and 3) of
+    2, 3:
+//    if ((micro_tact div 4) + 3) = (keyboard_x * 3) then // только E = 0 ? Ахинея ?
+      if ((micro_tact div 12)) = (keyboard_x - 1) then
+        if (keyboard_y > 0) then
+        begin
+          // keyboard_y = K2 * 8 + K1
+          Registr_S1[tact_0123] := Registr_S1[tact_0123] or ((keyboard_y and four_1248) > 0);
+          // T := true;
+        end;
+  end;
+
 
   if (microcommand and 1) > 0 then alfa := alfa or Registr_R[micro_tact];
   if (microcommand and 2) > 0 then alfa := alfa or Registr_M[micro_tact]; //micro_tact
@@ -256,6 +270,13 @@ begin
 
 
 
+    {
+  if tact_0123 = 0 then
+    if (Signal_D >= 0) and (Signal_D < 12) then
+      if L then segment_i8 := Signal_D;
+    }
+
+
   if ((cmd_130x[sk] and $FC0000) > 0) then
   begin
     // АСП1>=4
@@ -263,7 +284,9 @@ begin
   end else
   begin
     // АСП1<4
-    if ((micro_tact div 4) + 3) = (keyboard_x * 3) then // только E = 0 ?
+  //  if ((micro_tact div 4) + 3) = (keyboard_x * 3) then // только E = 0 ?  Ахинея ?
+    if ((micro_tact div 12) + 0) = (keyboard_x - 1) then // только E = 0 ?
+
       if (keyboard_y > 0) then
       begin
         // keyboard_y = K2 * 8 + K1
@@ -272,7 +295,7 @@ begin
       end;
 
     if tact_0123 = 0 then
-      if (Signal_D > 0) and (Signal_D < 12) then
+      if (Signal_D >= 0) and (Signal_D < 12) then
         if L then segment_i8 := Signal_D;
   // Диод VD4
   //if ((micro_tact div 12) + 1) = 13 then
@@ -318,8 +341,8 @@ begin
 
   if ((microcommand shr 21) and 1) > 0 then
   begin
-  if  tact_0123 = 3 then
-    L := perenos;
+    if tact_0123 = 3 then
+      L := perenos;
   end;
 
   if ((microcommand shr 20) and 1) > 0 then Registr_M[micro_tact] := Registr_S[tact_0123]; //micro_tact
@@ -407,7 +430,7 @@ begin
 
   ik1302.micro_tact := 0;
   ik1303.micro_tact := 0;
-
+  grd := 1;
 
   for i := 0 to 67 do
   begin
@@ -441,14 +464,21 @@ begin
     ik1302.Rg_In := ir2_2.Rg_Out;
     ik1302.tact_exec;
 
+    // Р ГРД Г
+    ik1303.keyboard_y := 9;
+    ik1303.keyboard_x := 0;
+
+    if (grd = 3) or (grd = 2) then if (ik1303.micro_tact div 12) = 9 then ik1303.keyboard_x := 10; // true
+    if grd = 2 then if (ik1303.micro_tact div 12) = 10 then ik1303.keyboard_x := 11; // true
+    //if (ik1303.micro_tact div 12) = 11 then ik1303.keyboard_x := 12; // false
+
 
     ik1303.Rg_In := ik1302.Rg_Out;
     ik1303.tact_exec;
 
-
-     {ik1306.Rg_In := ik1303.Rg_Out;
+    {ik1306.Rg_In := ik1303.Rg_Out;
     ik1306.tact_exec;
-     }
+    }
 
     ir2_1.Rg_In := ik1303.Rg_Out;
     ir2_1.tact_exec2;
@@ -456,13 +486,9 @@ begin
     ir2_2.Rg_In := ir2_1.Rg_Out;
     ir2_2.tact_exec2;
 
-   //  ik1302.Registr_M [167] := ir2_2.Rg_Out;
-
+    //  ik1302.Registr_M [167] := ir2_2.Rg_Out;
 
     ik1302.Registr_M[(ik1302.micro_tact + 167) mod 168] := ir2_2.Rg_Out;
-
-
-
 
   end;
 end;

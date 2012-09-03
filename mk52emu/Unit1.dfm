@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 381
-  Top = 316
+  Left = 239
+  Top = 388
   Width = 712
   Height = 184
   VertScrollBar.Visible = False
@@ -18,7 +18,7 @@ object Form1: TForm1
   object Image1: TImage
     Left = 16
     Top = 16
-    Width = 201
+    Width = 220
     Height = 41
   end
   object Button1: TButton
@@ -363,6 +363,42 @@ object Form1: TForm1
     Caption = 'Run'
     TabOrder = 37
     OnClick = Button35Click
+  end
+  object GroupBox1: TGroupBox
+    Left = 80
+    Top = 96
+    Width = 121
+    Height = 41
+    TabOrder = 38
+    object RadioButton1: TRadioButton
+      Left = 8
+      Top = 16
+      Width = 25
+      Height = 17
+      Caption = #1056
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+      OnClick = RadioButton1Click
+    end
+    object RadioButton2: TRadioButton
+      Left = 40
+      Top = 16
+      Width = 41
+      Height = 17
+      Caption = #1043#1056#1044
+      TabOrder = 1
+      OnClick = RadioButton2Click
+    end
+    object RadioButton3: TRadioButton
+      Left = 88
+      Top = 16
+      Width = 25
+      Height = 17
+      Caption = #1043
+      TabOrder = 2
+      OnClick = RadioButton3Click
+    end
   end
   object Timer1: TTimer
     Enabled = False
