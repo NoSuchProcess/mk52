@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ik13, ExtCtrls;
+  Dialogs, StdCtrls, ik13, ExtCtrls, Grids;
 
 type
   TForm1 = class(TForm)
@@ -44,12 +44,19 @@ type
     Button31: TButton;
     Image1: TImage;
     Button32: TButton;
+    StringGrid1: TStringGrid;
+    Button33: TButton;
+    Button34: TButton;
+    Button35: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Button31Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure show_ind();
     procedure Button32Click(Sender: TObject);
+    procedure Button33Click(Sender: TObject);
+    procedure Button34Click(Sender: TObject);
+    procedure Button35Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -70,10 +77,19 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   mk52 := Tmk52.Create;
-  mk52.ik1302.write_ri(36, 3);
-  mk52.ik1302.write_ri(39, 3);
+  mk52.ik1302.write_ri(36, 0); // start 00
+  mk52.ik1302.write_ri(39, 0);
+
+  mk52.ik1303.write_ri(36, 0); // start 00
+  mk52.ik1303.write_ri(39, 0);
 //  mk52.init;
 
+
+
+//mk52.ik1302.Registr_M[0] := true;
+//mk52.ik1302.Registr_M[1] := true;
+//mk52.ik1302.Registr_M[2] := true;
+//mk52.ik1302.Registr_M[3] := true;
 
 
   (*
@@ -85,7 +101,7 @@ begin
   Indicator1.Height := 50;
   Indicator1.show_ind();
    *)
-  //Timer1.Enabled := true;
+  Timer1.Enabled := true;
   ind_old[1] := 1;
   show_ind;
 end;
@@ -140,7 +156,10 @@ begin
         12: dig := 57;
         13: dig := 49;
         14: dig := 121;
-        15: dig := 113;
+       // 15: dig := 113;
+
+        15: dig := 0;
+
     //if ind[i + 1] = ' ' then dig := 0;
       end;
       if (dig and 1) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 0); bmp.Canvas.LineTo(x + 10, y + 0); end; //a
@@ -164,13 +183,26 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 var
   i: integer;
 begin
-  for i := 0 to 2500 do mk52.exec;
+  for i := 1 to 16800 do mk52.exec;
 
-  for i := 0 to 11 do
+ // for i := 0 to 11 do
+ // begin
+ //   ind[i] := mk52.ik1302.read_ri(i * 3);
+ //   ind[12] := mk52.ik1302.segment_i8;
+ // end;
+
+  for i := 0 to 8 do
   begin
-    ind[i] := mk52.ik1302.read_ri(i * 3);
-    ind[12] := mk52.ik1302.segment_i8;
+    ind[i] := mk52.ik1302.read_ri((8 - i) * 3);
   end;
+
+  for i := 0 to 2 do
+  begin
+    ind[i + 9] := mk52.ik1302.read_ri((11 - i) * 3);
+  end;
+
+  ind[12] := 8 - mk52.ik1302.segment_i8;
+
 
   show_ind;
 
@@ -184,7 +216,7 @@ var
   alfa: boolean;
   ind_str: string;
 begin
-  for i := 0 to 0 do
+//  for i := 0 to 0 do
   begin
     // if (ik1302.micro_tact div 12) = 11 then ik1302.h := 8 else ik1302.h := 0;
     // mk52.ik1302.h := 8+1;
@@ -202,6 +234,34 @@ begin
   memo1.Lines.Add('S1 := ' + inttostr(mk52.ik1302.read_rs(1)));
   memo1.Lines.Add('L := ' + inttostr(byte(mk52.ik1302.l)));
   memo1.Lines.Add('SK := ' + inttohex(mk52.ik1302.sk, 2));
+  ///
+  memo1.Lines.Add('micro_tact := ' + inttostr(byte(mk52.ik1302.micro_tact)));
+
+
+
+  StringGrid1.Cells[1, 1] := '1';
+
+
+  for i := 0 to 13 do
+  begin
+    StringGrid1.Cells[i + 1, 1] := inttohex(mk52.ik1302.read_m(i * 3), 1);
+    StringGrid1.Cells[i + 1, 2] := inttohex(mk52.ik1302.read_m((i * 3) + 1), 1);
+    StringGrid1.Cells[i + 1, 3] := inttohex(mk52.ik1302.read_m((i * 3) + 2), 1);
+
+    StringGrid1.Cells[i + 1, 4] := inttohex(mk52.ik1302.read_ri(i * 3), 1);
+    StringGrid1.Cells[i + 1, 5] := inttohex(mk52.ik1302.read_ri((i * 3) + 1), 1);
+    StringGrid1.Cells[i + 1, 6] := inttohex(mk52.ik1302.read_ri((i * 3) + 2), 1);
+
+    StringGrid1.Cells[i + 1, 7] := inttohex(mk52.ik1302.read_st(i * 3), 1);
+    StringGrid1.Cells[i + 1, 8] := inttohex(mk52.ik1302.read_st((i * 3) + 1), 1);
+    StringGrid1.Cells[i + 1, 9] := inttohex(mk52.ik1302.read_st((i * 3) + 2), 1);
+
+
+
+  end;
+
+
+
 
 
   // indikator
@@ -223,6 +283,9 @@ begin
 
   //edit1.Text := inttostr(byte(true));
   //dit1.Text := inttostr(not 1);
+
+
+
 
 end;
 
@@ -248,6 +311,38 @@ procedure TForm1.Button32Click(Sender: TObject);
 begin
   mk52.ik1302.keyboard_y := 0;
   mk52.ik1302.keyboard_x := 0;
+end;
+
+procedure TForm1.Button33Click(Sender: TObject);
+var
+  i: integer;
+begin
+ Timer1.Enabled := false;
+  for i := 0 to 41 do Button31Click(sender);
+
+end;
+
+procedure TForm1.Button34Click(Sender: TObject);
+var
+  ir2_1: Tir2;
+  i: integer;
+
+begin
+  ir2_1 := Tir2.Create;
+
+
+  for i := 0 to 1010 do
+  begin
+    ir2_1.Rg_In := true;
+    ir2_1.tact_exec2;
+    memo1.Lines.Add('ir2_1 := ' + inttostr(i) + ' - ' + inttostr(integer(ir2_1.Rg_Out)));
+
+  end;
+end;
+
+procedure TForm1.Button35Click(Sender: TObject);
+begin
+ Timer1.Enabled := true;
 end;
 
 end.

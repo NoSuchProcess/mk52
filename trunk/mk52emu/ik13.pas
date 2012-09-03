@@ -23,8 +23,17 @@ type
     function read_rs(i: byte): byte;
     function bool(i: byte): boolean;
 
+    function read_m(i: byte): byte;
+    function read_st(i: byte): byte;
+
   public
-    Registr_M: array[0..167] of boolean;
+    mc_130x: array[0..67] of cardinal;
+    cmd_130x: array[0..255] of cardinal;
+    sp_130x: array[0..1151] of byte;
+
+
+
+    Registr_M: array[0..168] of boolean;
     Registr_R: array[0..167] of boolean;
     Registr_ST: array[0..167] of boolean;
     Registr_S: array[0..3] of boolean;
@@ -32,6 +41,7 @@ type
     L, T, perenos: boolean;
     H: byte;
     micro_tact, microcommand: integer;
+
     sk: byte;
     md: byte;
     keyboard_x, keyboard_y, segment_i8: byte;
@@ -75,7 +85,7 @@ procedure Tir2.tact_exec2; // Ускоренный вариант
 begin
   if micro_tact > 1007 then micro_tact := 0;
   Rg_Out := Registr_M[micro_tact];
-  Registr_M[(micro_tact + 1007) mod 1008] := Rg_In;
+  Registr_M[(micro_tact + 1008) mod 1008] := Rg_In; // +1007 ?
   micro_tact := micro_tact + 1;
 end;
 
@@ -100,6 +110,18 @@ end;
 
 
 
+function Tik1302.read_m(i: byte): byte;
+
+begin
+  result := 0;
+  if Registr_M[i * 4] then result := result + 1;
+  if Registr_M[(i * 4) + 1] then result := result + 2;
+  if Registr_M[(i * 4) + 2] then result := result + 4;
+  if Registr_M[(i * 4) + 3] then result := result + 8;
+end;
+
+
+
 function Tik1302.read_ri(i: byte): byte;
 
 begin
@@ -109,6 +131,19 @@ begin
   if Registr_R[(i * 4) + 2] then result := result + 4;
   if Registr_R[(i * 4) + 3] then result := result + 8;
 end;
+
+
+
+function Tik1302.read_st(i: byte): byte;
+
+begin
+  result := 0;
+  if Registr_st[i * 4] then result := result + 1;
+  if Registr_st[(i * 4) + 1] then result := result + 2;
+  if Registr_st[(i * 4) + 2] then result := result + 4;
+  if Registr_st[(i * 4) + 3] then result := result + 8;
+end;
+
 
 procedure Tik1302.write_ri(i, data: byte);
 
@@ -129,11 +164,11 @@ begin
   // 012345678901234567890123456789012345678901  i
   // 012345345345345345345345678012345678012345  J
   k := micro_tact div 36;
-  if k < 3 then asp := $FF and (cmd_1302[sk]);
-  if k = 3 then asp := $FF and (cmd_1302[sk] shr 8);
+  if k < 3 then asp := $FF and (cmd_130x[sk]);
+  if k = 3 then asp := $FF and (cmd_130x[sk] shr 8);
   if k = 4 then
-    asp := $FF and (cmd_1302[sk] shr 16);
-  md := $FF and (cmd_1302[sk] shr 24);
+    asp := $FF and (cmd_130x[sk] shr 16);
+  md := $FF and (cmd_130x[sk] shr 24);
 
   if (k = 4) and (asp > $1F) then // стр. 115
   begin
@@ -152,7 +187,7 @@ begin
     asp := $5F; // ???   стр 145
   end;
 
-  adr_mc := sp_1302[(asp * 9) + J[micro_tact div 4]]; // адрес микроприказа
+  adr_mc := sp_130x[(asp * 9) + J[micro_tact div 4]]; // адрес микроприказа
 
   adr_mc := adr_mc and $3F;
   if (adr_mc > 59)
@@ -162,7 +197,7 @@ begin
     adr_mc := adr_mc + 60;
   end;
 
-  result := mc_1302[adr_mc];
+  result := mc_130x[adr_mc];
 end;
 
 
@@ -173,7 +208,7 @@ end;
 
 procedure Tik1302.tact_exec; // Ускоренный вариант
 var
-  four_1248, tact_0123: integer;
+  four_1248, tact_0123, n: integer;
   x, y, z: boolean;
   alfa, beta, gamma, sigma: boolean;
   summa: byte;
@@ -191,7 +226,7 @@ begin
   begin
     sk := read_ri(36) + 16 * read_ri(39);
 
-    if ((cmd_1302[sk] and $FC0000) = 0) then // АСП1<4
+    if ((cmd_130x[sk] and $FC0000) = 0) then // АСП1<4
       T := false;
   end;
   ///////////////////////////////////////////////////////////
@@ -202,12 +237,15 @@ begin
   beta := false;
   gamma := false;
 
-  if (microcommand and 32) > 0 then alfa := Registr_S[tact_0123];
-  if (microcommand and 16) > 0 then alfa := alfa or (($0A and four_1248) > 0) and (not L); // 1,2,4,8 alfa := $0A * (not L); //  *
-  if (microcommand and 8) > 0 then alfa := alfa or not Registr_R[micro_tact];
-  if (microcommand and 4) > 0 then alfa := alfa or Registr_ST[micro_tact];
-  if (microcommand and 2) > 0 then alfa := alfa or Registr_M[micro_tact];
+
   if (microcommand and 1) > 0 then alfa := alfa or Registr_R[micro_tact];
+  if (microcommand and 2) > 0 then alfa := alfa or Registr_M[micro_tact]; //micro_tact
+  if (microcommand and 4) > 0 then alfa := alfa or Registr_ST[micro_tact];
+  if (microcommand and 8) > 0 then alfa := alfa or not Registr_R[micro_tact];
+  if (microcommand and 16) > 0 then
+
+    alfa := alfa or ((($0A and four_1248) > 0) and (not L)); // 1,2,4,8 alfa := $0A * (not L); //  *
+  if (microcommand and 32) > 0 then alfa := alfa or Registr_S[tact_0123];
   if (microcommand and 64) > 0 then alfa := alfa or (($04 and four_1248) > 0);
 
   if ((microcommand shr 7) and 16) > 0 then beta := beta or (($01 and four_1248) > 0);
@@ -218,7 +256,7 @@ begin
 
 
 
-  if ((cmd_1302[sk] and $FC0000) > 0) then
+  if ((cmd_130x[sk] and $FC0000) > 0) then
   begin
     // АСП1>=4
     if (keyboard_y = 0) then T := false;
@@ -266,7 +304,7 @@ begin
   if ((md = 0) or ((micro_tact div 4) >= 36)) then
   begin
     case ((microcommand shr 15) and 7) of
-      1: Registr_R[micro_tact] := Registr_R[(micro_tact + 16) mod 168]; // i+3
+      1: Registr_R[micro_tact] := Registr_R[(micro_tact + 12) mod 168]; // i+3   // ???? 12 16
       2: Registr_R[micro_tact] := sigma;
       3: Registr_R[micro_tact] := Registr_S[tact_0123];
       4: Registr_R[micro_tact] := Registr_R[micro_tact] or Registr_S[tact_0123] or sigma;
@@ -278,23 +316,30 @@ begin
     if ((microcommand shr 19) and 1) > 0 then Registr_R[(micro_tact + 160) mod 168] := sigma; // i-2
   end;
 
-  if ((microcommand shr 21) and 1) > 0 then L := perenos;
-  if ((microcommand shr 20) and 1) > 0 then Registr_M[micro_tact] := Registr_S[tact_0123];
+  if ((microcommand shr 21) and 1) > 0 then
+  begin
+  if  tact_0123 = 3 then
+    L := perenos;
+  end;
+
+  if ((microcommand shr 20) and 1) > 0 then Registr_M[micro_tact] := Registr_S[tact_0123]; //micro_tact
 
   case ((microcommand shr 22) and 3) of
     1: Registr_S[tact_0123] := Registr_S1[tact_0123];
     2: Registr_S[tact_0123] := sigma;
-    3: Registr_S[tact_0123] := Registr_S1[tact_0123] or sigma;
+    3: Registr_S[tact_0123] := Registr_S1[tact_0123] or sigma; //    Registr_S1 ?
   end;
   case ((microcommand shr 24) and 3) of
     1: Registr_S1[tact_0123] := sigma;
-    2: Registr_S1[tact_0123] := Registr_S1[tact_0123] or ((H and four_1248) > 0);
-    3: Registr_S1[tact_0123] := Registr_S1[tact_0123] or ((H and four_1248) > 0) or sigma;
+    2: Registr_S1[tact_0123] := Registr_S1[tact_0123]; // or ((H and four_1248) > 0);
+    3: Registr_S1[tact_0123] := Registr_S1[tact_0123] or sigma; // or ((H and four_1248) > 0) or sigma;
   end;
+
+
   //    i-3              i-2                   i-1
   // 156 157 158 159   160 161 162 163   164 165 166 167
   //    i                i+1                i+2                i+3
-  // 0 1 2 3           4 5 6 7           8 9 10 11         16 17 18 19 20
+  // 0 1 2 3           4 5 6 7           8 9 10 11         12 13 14 15
 
   case ((microcommand shr 26) and 3) of
     // if ((microcommand shr 26) and 3) = 1 then
@@ -324,10 +369,23 @@ begin
   end;
 
   //(micro_tact + 8) mod 168
-  ///////////////////////////////////////////////////////////
+
+
+ { рабочий вариант
+  Rg_Out := Registr_M[0];
+  for n := 0 to 166 do Registr_M[n] := Registr_M[n + 1];
+  Registr_M[167] := Rg_In;
+  }
+
+
 
   Rg_Out := Registr_M[micro_tact];
-  Registr_M[(micro_tact + 167) mod 168] := Rg_In;
+  //Registr_M[(micro_tact + 167) mod 168] := Rg_In; // +167 ?
+  Registr_M[micro_tact] := Rg_In; // +167 ?
+
+
+  ///////////////////////////////////////////////////////////
+
 
   ///////////////////////////////////////////////////////////
 
@@ -337,6 +395,8 @@ end;
 
 
 constructor Tmk52.create;
+var
+  i: integer;
 begin
   inherited Create;
   ik1302 := Tik1302.Create;
@@ -344,6 +404,31 @@ begin
   ik1306 := Tik1302.Create;
   ir2_1 := Tir2.Create;
   ir2_2 := Tir2.Create;
+
+  ik1302.micro_tact := 0;
+  ik1303.micro_tact := 0;
+
+
+  for i := 0 to 67 do
+  begin
+    ik1302.mc_130x[i] := mk52roms.mc_1302[i];
+    ik1303.mc_130x[i] := mk52roms.mc_1303[i];
+  end;
+
+  for i := 0 to 255 do
+  begin
+    ik1302.cmd_130x[i] := mk52roms.cmd_1302[i];
+    ik1303.cmd_130x[i] := mk52roms.cmd_1303[i];
+  end;
+
+  for i := 0 to 1151 do
+  begin
+    ik1302.sp_130x[i] := mk52roms.sp_1302[i];
+    ik1303.sp_130x[i] := mk52roms.sp_1303[i];
+  end;
+
+
+
 end;
 
 procedure Tmk52.exec;
@@ -355,14 +440,30 @@ begin
   begin
     ik1302.Rg_In := ir2_2.Rg_Out;
     ik1302.tact_exec;
+
+
     ik1303.Rg_In := ik1302.Rg_Out;
     ik1303.tact_exec;
-    ik1306.Rg_In := ik1303.Rg_Out;
+
+
+     {ik1306.Rg_In := ik1303.Rg_Out;
     ik1306.tact_exec;
-    ir2_1.Rg_In := ik1306.Rg_Out;
+     }
+
+    ir2_1.Rg_In := ik1303.Rg_Out;
     ir2_1.tact_exec2;
+
     ir2_2.Rg_In := ir2_1.Rg_Out;
     ir2_2.tact_exec2;
+
+   //  ik1302.Registr_M [167] := ir2_2.Rg_Out;
+
+
+    ik1302.Registr_M[(ik1302.micro_tact + 167) mod 168] := ir2_2.Rg_Out;
+
+
+
+
   end;
 end;
 
