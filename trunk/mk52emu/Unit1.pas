@@ -57,6 +57,7 @@ type
     procedure Button31Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure show_ind();
+    procedure off_ind();
     procedure Button32Click(Sender: TObject);
     procedure Button33Click(Sender: TObject);
     procedure Button34Click(Sender: TObject);
@@ -64,6 +65,8 @@ type
     procedure RadioButton1Click(Sender: TObject);
     procedure RadioButton2Click(Sender: TObject);
     procedure RadioButton3Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -184,36 +187,63 @@ begin
   end;
 end;
 
+procedure TForm1.off_ind();
+var
+  i: integer;
+  bmp: tbitmap;
+begin
+  for i := 0 to 12 do
+  begin
+    ind_old[i] := not ind[i];
+  end;
 
+  bmp := tbitmap.Create;
+  bmp.Width := 220;
+  bmp.Height := 50;
+  bmp.TransparentColor := clwhite;
+  Image1.Picture.Bitmap.Assign(bmp);
+  bmp.Free;
+end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  i: integer;
+  i, i2: integer;
+  twinkle: boolean;
 begin
+  twinkle := true;
+  for i2 := 1 to 23520 do // 10x 16800
+  begin
+    mk52.exec; // 2352 реальная скорость (23520 тактов/сек)
+    //if ((mk52.ik1302.sk = $35) or (mk52.ik1302.sk = $09)) and twinkle and (mk52.ik1302.micro_tact = 164) then
+    if mk52.ik1302.ind then
+    begin
+      for i := 0 to 8 do ind[i] := mk52.ik1302.read_ri((8 - i) * 3);
+      for i := 0 to 2 do ind[i + 9] := mk52.ik1302.read_ri((11 - i) * 3);
+      ind[12] := 8 - mk52.ik1302.segment_i8;
 
-  for i := 1 to 16800 do mk52.exec; // 2352 реальная скорость (23520 тик/сек)
+      mk52.ik1302.ind := false;
+      twinkle := false;
+      //memo1.Lines.Add('SK := ' + inttohex(mk52.ik1302.sk, 2));
+    end;
 
+//      show_ind;
+  end;
  // for i := 0 to 11 do
  // begin
  //   ind[i] := mk52.ik1302.read_ri(i * 3);
  //   ind[12] := mk52.ik1302.segment_i8;
  // end;
 
-  for i := 0 to 8 do
+ // if twinkle then show_ind else off_ind;
+
+  if twinkle then // тьма
   begin
-    ind[i] := mk52.ik1302.read_ri((8 - i) * 3);
+    for i := 0 to 11 do
+      ind[i] := 15;
+    ind[12] := 8;
   end;
-
-  for i := 0 to 2 do
-  begin
-    ind[i + 9] := mk52.ik1302.read_ri((11 - i) * 3);
-  end;
-
-  ind[12] := 8 - mk52.ik1302.segment_i8;
-
 
   show_ind;
-
   mk52.ik1302.keyboard_y := 0;
   mk52.ik1302.keyboard_x := 0;
 end;
@@ -268,10 +298,24 @@ begin
   for i := 0 to 11 do
   begin
     ind_str := ind_str + inttohex(mk52.ik1302.read_ri(i * 3), 1);
-    ind[i] := mk52.ik1302.read_ri(i * 3);
-    ind[12] := mk52.ik1302.segment_i8;
+  //  ind[i] := mk52.ik1302.read_ri(i * 3);
+  //  ind[12] := mk52.ik1302.segment_i8;
   end;
   edit1.Text := ind_str;
+
+  for i := 0 to 8 do
+  begin
+    ind[i] := mk52.ik1302.read_ri((8 - i) * 3);
+  end;
+
+  for i := 0 to 2 do
+  begin
+    ind[i + 9] := mk52.ik1302.read_ri((11 - i) * 3);
+  end;
+
+  ind[12] := 8 - mk52.ik1302.segment_i8;
+
+
   show_ind;
 
   //alfa := boolean($FFFF);
@@ -356,6 +400,43 @@ procedure TForm1.RadioButton3Click(Sender: TObject);
 begin
   mk52.grd := 3;
   memo1.Lines.Add('3');
+end;
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  memo1.Lines.Add(inttostr(Key));
+
+  TButton(Sender).Name := 'Form1';
+  case Key of
+    27: TButton(Sender).Name := 'Button19';
+
+    96, 48: TButton(Sender).Name := 'Button1';
+    97, 49: TButton(Sender).Name := 'Button2';
+    98, 50: TButton(Sender).Name := 'Button3';
+    99, 51: TButton(Sender).Name := 'Button4';
+    100, 52: TButton(Sender).Name := 'Button5';
+    101, 53: TButton(Sender).Name := 'Button6';
+    102, 54: TButton(Sender).Name := 'Button7';
+    103, 55: TButton(Sender).Name := 'Button8';
+    104, 56: TButton(Sender).Name := 'Button9';
+    105, 57: TButton(Sender).Name := 'Button10';
+
+    107: TButton(Sender).Name := 'Button11';
+    109: TButton(Sender).Name := 'Button12';
+    106: TButton(Sender).Name := 'Button13';
+    111: TButton(Sender).Name := 'Button14';
+
+    190, 110: TButton(Sender).Name := 'Button16';
+
+    16: TButton(Sender).Name := 'Button20';
+
+    75: TButton(Sender).Name := 'Button29';
+    70: TButton(Sender).Name := 'Button30';
+  end;
+
+  if pos('Button', TButton(Sender).Name) > 0 then Button1Click(Sender);
+
 end;
 
 end.

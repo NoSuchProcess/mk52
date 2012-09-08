@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 239
-  Top = 388
+  Left = 265
+  Top = 447
   Width = 712
   Height = 184
   VertScrollBar.Visible = False
@@ -11,8 +11,10 @@ object Form1: TForm1
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
