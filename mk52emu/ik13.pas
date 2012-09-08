@@ -47,6 +47,8 @@ type
     keyboard_x, keyboard_y, segment_i8: byte;
     Rg_In, Rg_Out: boolean;
     asp, adr_mc: byte;
+
+    ind: boolean;
   end;
 
   Tmk52 = class
@@ -283,7 +285,8 @@ begin
     if (keyboard_y = 0) then T := false;
   end else
   begin
-    // АСП1<4
+    ind := true;
+  // АСП1<4
   //  if ((micro_tact div 4) + 3) = (keyboard_x * 3) then // только E = 0 ?  Ахинея ?
     if ((micro_tact div 12) + 0) = (keyboard_x - 1) then // только E = 0 ?
 
