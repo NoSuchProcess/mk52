@@ -244,11 +244,12 @@ begin
   case ((microcommand shr 24) and 3) of
     2, 3:
 //    if ((micro_tact div 4) + 3) = (keyboard_x * 3) then // только E = 0 ? Ахинея ?
-      if ((micro_tact div 12)) = (keyboard_x - 1) then
+      if ((micro_tact div 12)) <> (keyboard_x - 1) then
         if (keyboard_y > 0) then
         begin
           // keyboard_y = K2 * 8 + K1
-          Registr_S1[tact_0123] := Registr_S1[tact_0123] or ((keyboard_y and four_1248) > 0);
+          if four_1248 = 1 then
+            Registr_S1[tact_0123] := Registr_S1[tact_0123] or ((keyboard_y and four_1248) > 0);
           // T := true;
         end;
   end;
@@ -468,20 +469,19 @@ begin
     ik1302.tact_exec;
 
     // Р ГРД Г
-    ik1303.keyboard_y := 9;
-    ik1303.keyboard_x := 0;
+    //ik1303.keyboard_y := 1;
+    //ik1303.keyboard_x := 0;
 
-    if (grd = 3) or (grd = 2) then if (ik1303.micro_tact div 12) = 9 then ik1303.keyboard_x := 10; // true
-    if grd = 2 then if (ik1303.micro_tact div 12) = 10 then ik1303.keyboard_x := 11; // true
+    //if (grd = 3) or (grd = 2) then if (ik1303.micro_tact div 12) = 9 then ik1303.keyboard_x := 10; // true
+    //if grd = 2 then if (ik1303.micro_tact div 12) = 10 then ik1303.keyboard_x := 11; // true
     //if (ik1303.micro_tact div 12) = 11 then ik1303.keyboard_x := 12; // false
 
 
     ik1303.Rg_In := ik1302.Rg_Out;
     ik1303.tact_exec;
 
-    {ik1306.Rg_In := ik1303.Rg_Out;
-    ik1306.tact_exec;
-    }
+//    ik1306.Rg_In := ik1303.Rg_Out;
+//    ik1306.tact_exec;
 
     ir2_1.Rg_In := ik1303.Rg_Out;
     ir2_1.tact_exec2;

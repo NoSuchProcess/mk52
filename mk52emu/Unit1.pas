@@ -210,10 +210,14 @@ var
   i, i2: integer;
   twinkle: boolean;
 begin
+  // Р ГРД Г
+  mk52.ik1303.keyboard_y := 1;
+  mk52.ik1303.keyboard_x := mk52.grd + 9;
+
   twinkle := true;
-  for i2 := 1 to 23520 do // 10x 16800
+  for i2 := 1 to 560 do // 10x 16800
   begin
-    mk52.exec; // 2352 реальная скорость (23520 тактов/сек)
+    for i := 0 to 41 do mk52.exec; // 2352 реальная скорость (23520 тактов/сек)
     //if ((mk52.ik1302.sk = $35) or (mk52.ik1302.sk = $09)) and twinkle and (mk52.ik1302.micro_tact = 164) then
     if mk52.ik1302.ind then
     begin
@@ -392,13 +396,13 @@ end;
 
 procedure TForm1.RadioButton2Click(Sender: TObject);
 begin
-  mk52.grd := 2;
+  mk52.grd := 3;
   memo1.Lines.Add('2');
 end;
 
 procedure TForm1.RadioButton3Click(Sender: TObject);
 begin
-  mk52.grd := 3;
+  mk52.grd := 2;
   memo1.Lines.Add('3');
 end;
 
