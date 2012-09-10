@@ -4,7 +4,7 @@ object Form1: TForm1
   Width = 712
   Height = 184
   VertScrollBar.Visible = False
-  Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1080#1082#1072' '#1052#1050' 52 ('#1088#1077#1078#1080#1084' '#1041'3-34)'
+  Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1080#1082#1072' '#1052#1050' 52 ('#1088#1077#1078#1080#1084' '#1052#1050' 61)'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

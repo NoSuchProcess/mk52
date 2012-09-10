@@ -440,18 +440,21 @@ begin
   begin
     ik1302.mc_130x[i] := mk52roms.mc_1302[i];
     ik1303.mc_130x[i] := mk52roms.mc_1303[i];
+    ik1306.mc_130x[i] := mk52roms.mc_1306[i];
   end;
 
   for i := 0 to 255 do
   begin
     ik1302.cmd_130x[i] := mk52roms.cmd_1302[i];
     ik1303.cmd_130x[i] := mk52roms.cmd_1303[i];
+    ik1306.cmd_130x[i] := mk52roms.cmd_1306[i];
   end;
 
   for i := 0 to 1151 do
   begin
     ik1302.sp_130x[i] := mk52roms.sp_1302[i];
     ik1303.sp_130x[i] := mk52roms.sp_1303[i];
+    ik1306.sp_130x[i] := mk52roms.sp_1306[i];
   end;
 
 
@@ -480,10 +483,10 @@ begin
     ik1303.Rg_In := ik1302.Rg_Out;
     ik1303.tact_exec;
 
-//    ik1306.Rg_In := ik1303.Rg_Out;
-//    ik1306.tact_exec;
+    ik1306.Rg_In := ik1303.Rg_Out;
+    ik1306.tact_exec;
 
-    ir2_1.Rg_In := ik1303.Rg_Out;
+    ir2_1.Rg_In := ik1306.Rg_Out;
     ir2_1.tact_exec2;
 
     ir2_2.Rg_In := ir2_1.Rg_Out;
