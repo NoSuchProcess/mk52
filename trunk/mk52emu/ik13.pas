@@ -54,6 +54,7 @@ type
   Tmk52 = class
     constructor create;
     procedure exec;
+    procedure pre_exec(Rg_In: boolean);
 
   public
     ik1302, ik1303, ik1306: Tik1302;
@@ -461,12 +462,18 @@ begin
 
 end;
 
+procedure Tmk52.pre_exec(Rg_In: boolean);
+begin
+  ik1302.Registr_M[(ik1302.micro_tact + 167) mod 168] := Rg_In;
+end;
+
+
 procedure Tmk52.exec;
 var
   i: integer;
 
 begin
-  for i := 0 to 3 do
+//  for i := 0 to 3 do
   begin
     ik1302.Rg_In := ir2_2.Rg_Out;
     ik1302.tact_exec;
@@ -494,7 +501,9 @@ begin
 
     //  ik1302.Registr_M [167] := ir2_2.Rg_Out;
 
-    ik1302.Registr_M[(ik1302.micro_tact + 167) mod 168] := ir2_2.Rg_Out;
+   // ik1302.Registr_M[(ik1302.micro_tact + 167) mod 168] := ir2_2.Rg_Out;
+
+    pre_exec(ir2_2.Rg_Out);
 
   end;
 end;
