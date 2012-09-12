@@ -52,6 +52,10 @@ type
     RadioButton1: TRadioButton;
     RadioButton2: TRadioButton;
     RadioButton3: TRadioButton;
+    Button36: TButton;
+    Button37: TButton;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Button31Click(Sender: TObject);
@@ -67,6 +71,8 @@ type
     procedure RadioButton3Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure Button36Click(Sender: TObject);
+    procedure Button37Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -217,7 +223,7 @@ begin
   twinkle := true;
   for i2 := 1 to 560 do // 10x 16800
   begin
-    for i := 0 to 41 do mk52.exec; // 2352 реальная скорость (23520 тактов/сек)
+    for i := 0 to 167 do mk52.exec; // 2352 реальная скорость (23520 тактов/сек)
     //if ((mk52.ik1302.sk = $35) or (mk52.ik1302.sk = $09)) and twinkle and (mk52.ik1302.micro_tact = 164) then
     if mk52.ik1302.ind then
     begin
@@ -258,7 +264,7 @@ var
   alfa: boolean;
   ind_str: string;
 begin
-//  for i := 0 to 0 do
+  for i := 0 to 3 do
   begin
     // if (ik1302.micro_tact div 12) = 11 then ik1302.h := 8 else ik1302.h := 0;
     // mk52.ik1302.h := 8+1;
@@ -441,6 +447,113 @@ begin
 
   if pos('Button', TButton(Sender).Name) > 0 then Button1Click(Sender);
 
+end;
+
+procedure TForm1.Button36Click(Sender: TObject);
+var
+  ToF: file;
+  data: byte;
+  i, start: integer;
+  filename: string;
+begin
+  SaveDialog1.Filter := 'Bin files (*.bin)|*.bin';
+  if SaveDialog1.Execute then
+  begin
+    filename := SaveDialog1.FileName;
+    repeat
+      repeat
+        mk52.exec;
+      until mk52.ik1302.micro_tact = 0;
+      start := 0;
+      for i := 0 to 13 do start := start + mk52.ik1302.read_m((i * 3) + 1);
+    until start = 135;
+
+    for i := 0 to 5 do
+    begin
+      repeat
+        mk52.exec;
+      until mk52.ik1302.micro_tact = 0;
+    end;
+
+
+    if pos('.bin', filename) = 0 then filename := filename + '.bin';
+
+    AssignFile(ToF, filename);
+    Rewrite(ToF, 1);
+
+    for i := 1 to 315 do
+    begin
+      data := 0;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 1;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 2;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 4;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 8;
+
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 16;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 32;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 64;
+      mk52.exec;
+      if mk52.ir2_2.Rg_Out then data := data + 128;
+
+      BlockWrite(ToF, data, 1);
+    end;
+
+    CloseFile(ToF);
+  end;
+end;
+
+procedure TForm1.Button37Click(Sender: TObject);
+var
+  FromF: file;
+  data: byte;
+  i: integer;
+  filename: string;
+begin
+  OpenDialog1.Filter := 'Bin files (*.bin)|*.bin';
+  if OpenDialog1.Execute then
+  begin
+    filename := OpenDialog1.FileName;
+
+    repeat
+      mk52.exec;
+    until mk52.ik1302.micro_tact = 0;
+
+    AssignFile(FromF, filename);
+    Reset(FromF, 1);
+
+    if FileSize(FromF) = 315 then
+      for i := 1 to 315 do
+      begin
+        BlockRead(FromF, data, 1);
+
+        mk52.exec;
+        if (data and 1) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+        mk52.exec;
+        if (data and 2) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+        mk52.exec;
+        if (data and 4) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+        mk52.exec;
+        if (data and 8) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+
+        mk52.exec;
+        if (data and 16) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+        mk52.exec;
+        if (data and 32) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+        mk52.exec;
+        if (data and 64) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+        mk52.exec;
+        if (data and 128) > 0 then mk52.pre_exec(true) else mk52.pre_exec(false);
+      end;
+
+    CloseFile(FromF);
+  end;
 end;
 
 end.

@@ -402,11 +402,37 @@ object Form1: TForm1
       OnClick = RadioButton3Click
     end
   end
+  object Button36: TButton
+    Left = 240
+    Top = 112
+    Width = 49
+    Height = 25
+    Caption = 'Save'
+    TabOrder = 39
+    OnClick = Button36Click
+  end
+  object Button37: TButton
+    Left = 240
+    Top = 80
+    Width = 49
+    Height = 25
+    Caption = 'Load'
+    TabOrder = 40
+    OnClick = Button37Click
+  end
   object Timer1: TTimer
     Enabled = False
     Interval = 100
     OnTimer = Timer1Timer
-    Left = 256
-    Top = 96
+    Left = 200
+    Top = 64
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 160
+    Top = 64
+  end
+  object SaveDialog1: TSaveDialog
+    Left = 128
+    Top = 64
   end
 end
