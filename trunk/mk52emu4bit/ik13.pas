@@ -49,6 +49,7 @@ type
     asp, adr_mc: byte;
 
     ind: boolean;
+    ind_multipoint: array[0..13] of boolean;
   end;
 
   Tmk52 = class
@@ -310,6 +311,9 @@ begin
     if tact_0123 = 0 then
       if (Signal_D >= 0) and (Signal_D < 12) then
         if L > 0 then segment_i8 := Signal_D;
+
+    ind_multipoint[Signal_D] := L > 0;
+
   // Диод VD4
   //if ((micro_tact div 12) + 1) = 13 then
   (* if (micro_tact div 4) = 36 then
