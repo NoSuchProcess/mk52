@@ -79,6 +79,8 @@ type
     { Public declarations }
     ind, ind_old: array[0..12] of byte;
 
+    ind_multipoint: array[0..13] of boolean;
+
     mk52: Tmk52;
   end;
 
@@ -185,7 +187,10 @@ begin
       if (dig and 16) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 20); bmp.Canvas.LineTo(x + 0, y + 10); end; //e
       if (dig and 32) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 10); bmp.Canvas.LineTo(x + 0, y + 00); end; //f
       if (dig and 64) > 0 then begin bmp.Canvas.MoveTo(x + 0, y + 10); bmp.Canvas.LineTo(x + 10, y + 10); end; //g
-      if ((ind[12] + 1) = i) and (i <> 9) then begin bmp.Canvas.MoveTo(x + 12, y + 22); bmp.Canvas.LineTo(x + 12, y + 23); end; //g
+  //    if ((ind[12] + 1) = i) and (i <> 9) then begin bmp.Canvas.MoveTo(x + 12, y + 22); bmp.Canvas.LineTo(x + 12, y + 23); end; //g
+
+      if ind_multipoint[i] then begin bmp.Canvas.MoveTo(x + 12, y + 22); bmp.Canvas.LineTo(x + 12, y + 23); end; //g
+
     end;
     Image1.Transparent := true;
     Image1.Picture.Bitmap.Assign(bmp);
@@ -231,6 +236,10 @@ begin
       for i := 0 to 2 do ind[i + 9] := mk52.ik1302.read_ri((11 - i) * 3);
       ind[12] := 8 - mk52.ik1302.segment_i8;
 
+      for i := 0 to 8 do ind_multipoint[i] := mk52.ik1302.ind_multipoint[9 - i];
+      for i := 0 to 2 do ind_multipoint[i + 9] := mk52.ik1302.ind_multipoint[12 - i];
+
+
       mk52.ik1302.ind := false;
       twinkle := false;
       //memo1.Lines.Add('SK := ' + inttohex(mk52.ik1302.sk, 2));
@@ -248,9 +257,10 @@ begin
 
   if twinkle then // тьма
   begin
-    for i := 0 to 11 do
-      ind[i] := 15;
+    for i := 0 to 11 do ind[i] := 15;
     ind[12] := 8;
+    for i := 0 to 11 do ind_multipoint[i] := false;
+
   end;
 
   show_ind;
