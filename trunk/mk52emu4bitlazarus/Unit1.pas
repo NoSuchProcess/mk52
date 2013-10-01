@@ -121,6 +121,10 @@ type
       Shift: TShiftState);
     procedure Button36Click(Sender: TObject);
     procedure Button37Click(Sender: TObject);
+
+    procedure safe();
+
+
   private
     { Private declarations }
   public
@@ -141,6 +145,27 @@ var
 implementation
 
 {$R *.lfm}
+
+procedure TForm1.safe();
+var
+  i, start: integer;
+begin
+  repeat
+      repeat
+        mk52.exec;
+      until mk52.ik1302.micro_tact = 0;
+      start := 0;
+      for i := 0 to 13 do start := start + mk52.ik1302.read_m((i * 3) + 1);
+    until start = 135;
+
+   (* for i := 0 to 0 do
+    begin
+      repeat
+        mk52.exec;
+      until mk52.ik1302.micro_tact = 0;
+    end;
+    *)
+end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -179,12 +204,14 @@ end;
 
 procedure TForm1.RadioButton4Click(Sender: TObject);
 begin
+   safe();
    mk52.mode := 1;
 end;
 
 procedure TForm1.RadioButton5Click(Sender: TObject);
 begin
-    mk52.mode := 2;
+   safe();
+   mk52.mode := 2;
 end;
 
 procedure TForm1.RadioButton6Click(Sender: TObject);
