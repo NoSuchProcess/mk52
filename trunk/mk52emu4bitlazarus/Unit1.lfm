@@ -1,0 +1,772 @@
+object Form1: TForm1
+  Left = 244
+  Height = 193
+  Top = 348
+  Width = 708
+  HorzScrollBar.Visible = False
+  VertScrollBar.Visible = False
+  Caption = 'Электроника МК 52 (режим МК 61 4bit)'
+  ClientHeight = 193
+  ClientWidth = 708
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  LCLVersion = '1.0.10.0'
+  object Image1: TImage
+    Left = 16
+    Height = 41
+    Top = 24
+    Width = 220
+  end
+  object Label1: TLabel
+    Left = 312
+    Height = 15
+    Top = 8
+    Width = 25
+    Caption = 'x<0'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 369
+    Height = 15
+    Top = 8
+    Width = 16
+    Caption = 'L0'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 416
+    Height = 15
+    Top = 8
+    Width = 41
+    Caption = 'sin [x]'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 464
+    Height = 15
+    Top = 8
+    Width = 50
+    Caption = 'cos {x}'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 528
+    Height = 15
+    Top = 8
+    Width = 44
+    Caption = 'tg max'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 584
+    Height = 15
+    Top = 8
+    Width = 26
+    Caption = 'sqrt'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    Left = 640
+    Height = 15
+    Top = 8
+    Width = 20
+    Caption = '1/x'
+    ParentColor = False
+  end
+  object Label8: TLabel
+    Left = 312
+    Height = 15
+    Top = 48
+    Width = 25
+    Caption = 'x=0'
+    ParentColor = False
+  end
+  object Label9: TLabel
+    Left = 369
+    Height = 15
+    Top = 48
+    Width = 16
+    Caption = 'L1'
+    ParentColor = False
+  end
+  object Label10: TLabel
+    Left = 408
+    Height = 15
+    Top = 48
+    Width = 52
+    Caption = 'sin-1 |x|'
+    ParentColor = False
+  end
+  object Label11: TLabel
+    Left = 464
+    Height = 15
+    Top = 48
+    Width = 57
+    Caption = 'cos-1 ЗН'
+    ParentColor = False
+  end
+  object Label12: TLabel
+    Left = 528
+    Height = 15
+    Top = 48
+    Width = 47
+    Caption = 'tg-1  o/'
+    ParentColor = False
+  end
+  object Label13: TLabel
+    Left = 584
+    Height = 15
+    Top = 48
+    Width = 33
+    Caption = 'pi  o/'
+    ParentColor = False
+  end
+  object Label14: TLabel
+    Left = 640
+    Height = 15
+    Top = 48
+    Width = 25
+    Caption = 'x^2'
+    ParentColor = False
+  end
+  object Label15: TLabel
+    Left = 303
+    Height = 15
+    Top = 88
+    Width = 34
+    Caption = 'x>=0'
+    ParentColor = False
+  end
+  object Label16: TLabel
+    Left = 369
+    Height = 15
+    Top = 88
+    Width = 16
+    Caption = 'L2'
+    ParentColor = False
+  end
+  object Label17: TLabel
+    Left = 424
+    Height = 15
+    Top = 88
+    Width = 25
+    Caption = 'e^x'
+    ParentColor = False
+  end
+  object Label18: TLabel
+    Left = 480
+    Height = 15
+    Top = 88
+    Width = 13
+    Caption = 'lg'
+    ParentColor = False
+  end
+  object Label19: TLabel
+    Left = 528
+    Height = 15
+    Top = 88
+    Width = 45
+    Caption = 'ln  o/ //'
+    ParentColor = False
+  end
+  object Label20: TLabel
+    Left = 576
+    Height = 15
+    Top = 88
+    Width = 56
+    Caption = 'x^y  o/ //'
+    ParentColor = False
+  end
+  object Label21: TLabel
+    Left = 640
+    Height = 15
+    Top = 88
+    Width = 39
+    Caption = 'Bx СЧ'
+    ParentColor = False
+  end
+  object Label22: TLabel
+    Left = 304
+    Height = 15
+    Top = 128
+    Width = 34
+    Caption = 'x><0'
+    ParentColor = False
+  end
+  object Label23: TLabel
+    Left = 369
+    Height = 15
+    Top = 128
+    Width = 16
+    Caption = 'L3'
+    ParentColor = False
+  end
+  object Label24: TLabel
+    Left = 408
+    Height = 15
+    Top = 128
+    Width = 65
+    Caption = '10^x НОП'
+    ParentColor = False
+  end
+  object Label25: TLabel
+    Left = 480
+    Height = 15
+    Top = 128
+    Width = 24
+    Caption = 'O ^'
+    ParentColor = False
+  end
+  object Label26: TLabel
+    Left = 528
+    Height = 15
+    Top = 128
+    Width = 37
+    Caption = 'АВТ v'
+    ParentColor = False
+  end
+  object Label27: TLabel
+    Left = 584
+    Height = 15
+    Top = 128
+    Width = 48
+    Caption = 'ПРГ (+)'
+    ParentColor = False
+  end
+  object Label28: TLabel
+    Left = 640
+    Height = 15
+    Top = 128
+    Width = 49
+    Caption = 'CF ИНВ'
+    ParentColor = False
+  end
+  object Label29: TLabel
+    Left = 488
+    Height = 15
+    Top = 168
+    Width = 9
+    Caption = 'a'
+    ParentColor = False
+  end
+  object Label30: TLabel
+    Left = 545
+    Height = 15
+    Top = 168
+    Width = 9
+    Caption = 'b'
+    ParentColor = False
+  end
+  object Label31: TLabel
+    Left = 600
+    Height = 15
+    Top = 168
+    Width = 8
+    Caption = 'c'
+    ParentColor = False
+  end
+  object Label32: TLabel
+    Left = 656
+    Height = 15
+    Top = 168
+    Width = 9
+    Caption = 'd'
+    ParentColor = False
+  end
+  object Label33: TLabel
+    Left = 686
+    Height = 15
+    Top = 112
+    Width = 9
+    Caption = 'e'
+    ParentColor = False
+  end
+  object Button1: TButton
+    Left = 408
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = '0'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Edit1: TEdit
+    Left = 368
+    Height = 26
+    Top = 296
+    Width = 201
+    TabOrder = 1
+    Text = 'Edit1'
+  end
+  object Memo1: TMemo
+    Left = 368
+    Height = 137
+    Top = 392
+    Width = 201
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 2
+  end
+  object Button2: TButton
+    Left = 408
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = '1'
+    OnClick = Button1Click
+    TabOrder = 3
+  end
+  object Button3: TButton
+    Left = 464
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = '2'
+    OnClick = Button1Click
+    TabOrder = 4
+  end
+  object Button4: TButton
+    Left = 520
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = '3'
+    OnClick = Button1Click
+    TabOrder = 5
+  end
+  object Button5: TButton
+    Left = 408
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = '4'
+    OnClick = Button1Click
+    TabOrder = 6
+  end
+  object Button6: TButton
+    Left = 464
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = '5'
+    OnClick = Button1Click
+    TabOrder = 7
+  end
+  object Button7: TButton
+    Left = 520
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = '6'
+    OnClick = Button1Click
+    TabOrder = 8
+  end
+  object Button8: TButton
+    Left = 408
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = '7'
+    OnClick = Button1Click
+    TabOrder = 9
+  end
+  object Button9: TButton
+    Left = 464
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = '8'
+    OnClick = Button1Click
+    TabOrder = 10
+  end
+  object Button10: TButton
+    Left = 520
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = '9'
+    OnClick = Button1Click
+    TabOrder = 11
+  end
+  object Button11: TButton
+    Left = 576
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = '+'
+    OnClick = Button1Click
+    TabOrder = 12
+  end
+  object Button12: TButton
+    Left = 576
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = '-'
+    OnClick = Button1Click
+    TabOrder = 13
+  end
+  object Button13: TButton
+    Left = 632
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = '*'
+    OnClick = Button1Click
+    TabOrder = 14
+  end
+  object Button14: TButton
+    Left = 632
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = '/'
+    OnClick = Button1Click
+    TabOrder = 15
+  end
+  object Button15: TButton
+    Left = 576
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = '<->'
+    OnClick = Button1Click
+    TabOrder = 16
+  end
+  object Button16: TButton
+    Left = 464
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = '.'
+    OnClick = Button1Click
+    TabOrder = 17
+  end
+  object Button17: TButton
+    Left = 520
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = '/-/'
+    OnClick = Button1Click
+    TabOrder = 18
+  end
+  object Button18: TButton
+    Left = 576
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = 'ВП'
+    OnClick = Button1Click
+    TabOrder = 19
+  end
+  object Button19: TButton
+    Left = 632
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = 'Сх'
+    OnClick = Button1Click
+    TabOrder = 20
+  end
+  object Button20: TButton
+    Left = 632
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = 'B⭪'
+    OnClick = Button1Click
+    TabOrder = 21
+  end
+  object Button21: TButton
+    Left = 296
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = 'С/П'
+    OnClick = Button1Click
+    TabOrder = 22
+  end
+  object Button22: TButton
+    Left = 352
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = 'БП'
+    OnClick = Button1Click
+    TabOrder = 23
+  end
+  object Button23: TButton
+    Left = 296
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = 'В/0'
+    OnClick = Button1Click
+    TabOrder = 24
+  end
+  object Button24: TButton
+    Left = 352
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = 'ПП'
+    OnClick = Button1Click
+    TabOrder = 25
+  end
+  object Button25: TButton
+    Left = 352
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = 'ХП'
+    OnClick = Button1Click
+    TabOrder = 26
+  end
+  object Button26: TButton
+    Left = 296
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = 'ШГ->'
+    OnClick = Button1Click
+    TabOrder = 27
+  end
+  object Button27: TButton
+    Left = 352
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = 'ПХ'
+    OnClick = Button1Click
+    TabOrder = 28
+  end
+  object Button28: TButton
+    Left = 296
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = '<-ШГ'
+    OnClick = Button1Click
+    TabOrder = 29
+  end
+  object Button29: TButton
+    Left = 240
+    Height = 25
+    Top = 64
+    Width = 49
+    Caption = 'К'
+    OnClick = Button1Click
+    TabOrder = 30
+  end
+  object Button30: TButton
+    Left = 240
+    Height = 25
+    Top = 24
+    Width = 49
+    Caption = 'F'
+    OnClick = Button1Click
+    TabOrder = 31
+  end
+  object Button31: TButton
+    Left = 16
+    Height = 25
+    Top = 264
+    Width = 49
+    Caption = 'Step'
+    OnClick = Button31Click
+    TabOrder = 32
+  end
+  object Button32: TButton
+    Left = 152
+    Height = 25
+    Top = 264
+    Width = 49
+    Caption = 'KeyUp'
+    OnClick = Button32Click
+    TabOrder = 33
+  end
+  object StringGrid1: TStringGrid
+    Left = 16
+    Height = 233
+    Top = 296
+    Width = 337
+    ColCount = 15
+    DefaultColWidth = 20
+    DefaultRowHeight = 20
+    RowCount = 10
+    TabOrder = 34
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'MS Sans Serif'
+  end
+  object Button33: TButton
+    Left = 80
+    Height = 25
+    Top = 264
+    Width = 49
+    Caption = 'Step42'
+    OnClick = Button33Click
+    TabOrder = 35
+  end
+  object Button34: TButton
+    Left = 224
+    Height = 25
+    Top = 264
+    Width = 75
+    Caption = 'Button34'
+    OnClick = Button34Click
+    TabOrder = 36
+  end
+  object Button35: TButton
+    Left = 320
+    Height = 25
+    Top = 264
+    Width = 75
+    Caption = 'Run'
+    OnClick = Button35Click
+    TabOrder = 37
+  end
+  object GroupBox1: TGroupBox
+    Left = 112
+    Height = 41
+    Top = 128
+    Width = 121
+    ClientHeight = 39
+    ClientWidth = 119
+    TabOrder = 38
+    object RadioButton1: TRadioButton
+      Left = 6
+      Height = 23
+      Top = 2
+      Width = 35
+      Caption = 'Р'
+      Checked = True
+      OnClick = RadioButton1Click
+      TabOrder = 0
+      TabStop = True
+    end
+    object RadioButton2: TRadioButton
+      Left = 38
+      Height = 23
+      Top = 2
+      Width = 50
+      Caption = 'ГРД'
+      OnClick = RadioButton2Click
+      TabOrder = 1
+    end
+    object RadioButton3: TRadioButton
+      Left = 86
+      Height = 23
+      Top = 2
+      Width = 33
+      Caption = 'Г'
+      OnClick = RadioButton3Click
+      TabOrder = 2
+    end
+  end
+  object Button36: TButton
+    Left = 240
+    Height = 25
+    Top = 144
+    Width = 49
+    Caption = 'Save'
+    OnClick = Button36Click
+    TabOrder = 39
+  end
+  object Button37: TButton
+    Left = 240
+    Height = 25
+    Top = 104
+    Width = 49
+    Caption = 'Load'
+    OnClick = Button37Click
+    TabOrder = 40
+  end
+  object GroupBox2: TGroupBox
+    Left = 16
+    Height = 41
+    Top = 128
+    Width = 96
+    ClientHeight = 39
+    ClientWidth = 94
+    TabOrder = 41
+    object RadioButton4: TRadioButton
+      Left = 7
+      Height = 23
+      Top = 3
+      Width = 40
+      Caption = '61'
+      Checked = True
+      OnClick = RadioButton4Click
+      TabOrder = 0
+    end
+    object RadioButton5: TRadioButton
+      Left = 47
+      Height = 23
+      Top = 3
+      Width = 44
+      Caption = '34 '
+      OnClick = RadioButton5Click
+      TabOrder = 1
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 16
+    Height = 40
+    Top = 80
+    Width = 155
+    ClientHeight = 38
+    ClientWidth = 153
+    TabOrder = 42
+    object RadioButton6: TRadioButton
+      Left = 7
+      Height = 23
+      Top = 7
+      Width = 34
+      Caption = '1'
+      Checked = True
+      OnClick = RadioButton6Click
+      TabOrder = 0
+    end
+    object RadioButton7: TRadioButton
+      Left = 47
+      Height = 23
+      Top = 7
+      Width = 44
+      Caption = '10 '
+      OnClick = RadioButton7Click
+      TabOrder = 1
+    end
+    object RadioButton8: TRadioButton
+      Left = 90
+      Height = 23
+      Top = 7
+      Width = 51
+      Caption = '100 '
+      OnClick = RadioButton8Click
+      TabOrder = 2
+    end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = Timer1Timer
+    left = 200
+    top = 72
+  end
+  object OpenDialog1: TOpenDialog
+    left = 160
+    top = 72
+  end
+  object SaveDialog1: TSaveDialog
+    left = 128
+    top = 72
+  end
+end
