@@ -27,9 +27,6 @@ QDialog (parent), ui (new Ui::Dialog)
   mk52.ik1306.write_ri (39, 0);
 
 
-
-
-
   QTimer *timer = new QTimer (this);
   connect (timer, SIGNAL (timeout ()), this, SLOT (OnTimer ()));
   timer->start (100);
@@ -78,9 +75,9 @@ QDialog (parent), ui (new Ui::Dialog)
   for (i = 0; i < btns.count (); i++)
     {
       connect (btns.at (i), SIGNAL (pressed ()), this,
-	       SLOT (on_keypad_clicked ()));
+	       SLOT (onkeypad_clicked ()));
       connect (btns.at (i), SIGNAL (released ()), this,
-	       SLOT (on_keypad_clicked ()));
+	       SLOT (onkeypad_clicked ()));
     }
 
 
@@ -106,30 +103,56 @@ Dialog::OnTimer ()
 
 
 
+  bool twinkle;
+  twinkle = true;
+
+
   for (i2 = 1; i2 <= 56; i2++)
-    for (i = 0; i <= 41; i++)
-      mk52.exec ();
 
-
-
-
-  for (i = 0; i <= 8; i++)
     {
-      strncat (ind, &chr[mk52.ik1302.read_ri ((8 - i) * 3)], 1);
+      for (i = 0; i <= 41; i++)
+	mk52.exec ();
 
-      if (mk52.ik1302.ind_multipoint[9 - i] > 0)
-	strncat (ind, ".", 1);
+      if (mk52.ik1302.ind > 0)
+
+	{
+	  strcpy (ind, "");
+
+	  for (i = 0; i <= 8; i++)
+	    {
+	      strncat (ind, &chr[mk52.ik1302.read_ri ((8 - i) * 3)], 1);
+
+	      if (mk52.ik1302.ind_multipoint[9 - i] > 0)
+		strncat (ind, ".", 1);
+	    }
+
+	  for (i = 0; i <= 2; i++)
+	    {
+	      strncat (ind, &chr[mk52.ik1302.read_ri ((11 - i) * 3)], 1);
+	      if (mk52.ik1302.ind_multipoint[12 - i] > 0)
+		strncat (ind, ".", 1);
+
+	    }
+	  mk52.ik1302.ind = false;
+	  twinkle = false;
+	}
     }
 
-
-
-  for (i = 0; i <= 2; i++)
+  if (twinkle)
     {
-      strncat (ind, &chr[mk52.ik1302.read_ri ((11 - i) * 3)], 1);
-      if (mk52.ik1302.ind_multipoint[12 - i] > 0)
-	strncat (ind, ".", 1);
-
+      strcpy (ind, "");
     }
+  else
+    {
+      mk52.ik1302.keyboard_y = 0;
+      mk52.ik1302.keyboard_x = 0;
+    }
+
+  ui->lcdNumber->setSmallDecimalPoint (true);
+
+  ui->lcdNumber->display (QString ().sprintf ("%s", ind));
+
+
 //  strncat (ind, &chr[8 - mk52.ik1302.segment_i8], 1);
 
 
@@ -236,30 +259,15 @@ Dialog::OnTimer ()
 
   */
 
-  mk52.ik1302.keyboard_y = 0;
-  mk52.ik1302.keyboard_x = 0;
-
-
-  ui->lcdNumber->setSmallDecimalPoint (true);
-
-  ui->lcdNumber->display (QString ().sprintf ("%s", ind));
-
-
 }
 
-
-
-
 void
-Dialog::on_keypad_clicked ()
+Dialog::onkeypad_clicked ()
 {
   int i, key_y, key_x;
 
-
   mk52.ik1302.keyboard_y = 0;
   mk52.ik1302.keyboard_x = 0;
-
-
 
   //cycle
 
@@ -284,8 +292,6 @@ Dialog::on_keypad_clicked ()
 
 
 	  //ui->textEdit->append (QString ().       sprintf ("key  :=  %.2i , %i", key_y, key_x));
-
-
 
 	  //    btnpressed=(i/10)+1;
 	  //    btnpressed<<=8;
