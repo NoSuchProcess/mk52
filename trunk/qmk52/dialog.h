@@ -23,7 +23,7 @@ private:
 
 
   public slots:private slots:void OnTimer ();
-  void on_keypad_clicked ();
+  void onkeypad_clicked ();
 
   void on_radioButton_clicked ();
   void on_radioButton_2_clicked ();
